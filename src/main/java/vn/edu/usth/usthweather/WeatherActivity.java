@@ -1,14 +1,16 @@
-package vn.edu.usth.weather;
+package vn.edu.usth.usthweather;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
+import android.os.Bundle;
 
 public class WeatherActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
         Log.i("InfoTag", "onCreate");
+        ForecastFragment forecastFrag = new ForecastFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.container, forecastFrag).commit();
     }
     @Override
     protected void onStart() {

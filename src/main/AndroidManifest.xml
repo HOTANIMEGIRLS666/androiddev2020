@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="vn.edu.usth.weather">
+    package="vn.edu.usth.usthweather">
 
     <application
         android:allowBackup="true"
@@ -16,4 +16,6 @@
             </intent-filter>
         </activity>
     </application>
+
+
 </manifest>
