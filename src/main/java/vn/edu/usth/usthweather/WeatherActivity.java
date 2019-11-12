@@ -8,6 +8,7 @@ public class WeatherActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
+        setContentView(R.layout.activity_weather);
         Log.i("InfoTag", "onCreate");
         ForecastFragment forecastFrag = new ForecastFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.container, forecastFrag).commit();
