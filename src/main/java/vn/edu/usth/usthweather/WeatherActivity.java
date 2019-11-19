@@ -5,6 +5,7 @@ import android.util.Log;
 import android.os.Bundle;
 
 public class WeatherActivity extends AppCompatActivity {
+
     @Override
     public void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
@@ -38,4 +39,5 @@ public class WeatherActivity extends AppCompatActivity {
         super.onDestroy();
         Log.i("InfoTag", "onDestroy");
     }
+
 }
