@@ -11,6 +11,9 @@ import androidx.viewpager.widget.ViewPager;
 import android.util.Log;
 import android.os.Bundle;
 
+import com.google.android.material.tabs.TabLayout;
+
+
 public class WeatherActivity extends AppCompatActivity {
 
     public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
@@ -20,19 +23,22 @@ public class WeatherActivity extends AppCompatActivity {
         public HomeFragmentPagerAdapter(FragmentManager fm) {
             super(fm);
         }
+
         @Override
         public int getCount() {
             return PAGE_COUNT;
         }
+
         @Override
         public Fragment getItem(int page) {
             switch (page) {
-                case 0: return WeatherAndForecastFragment.newInstance(0,"Page 1");
-                case 1: return WeatherAndForecastFragment.newInstance(1,"Page 2");
-                case 2: return WeatherAndForecastFragment.newInstance(2, "Page 3");
+                case 0: return WeatherAndForecastFragment.newInstance();
+                case 1: return WeatherAndForecastFragment.newInstance();
+                case 2: return WeatherAndForecastFragment.newInstance();
             }
             return null;
         }
+
         @Override
         public CharSequence getPageTitle(int page) {
             return titles[page];
@@ -44,11 +50,14 @@ public class WeatherActivity extends AppCompatActivity {
         super.onCreate(saveInstanceState);
         setContentView(R.layout.activity_weather);
         Log.i("InfoTag", "onCreate");;
-        PagerAdapter adapter = new HomeFragmentPagerAdapter(
-                getSupportFragmentManager());
+
+        PagerAdapter adapter = new HomeFragmentPagerAdapter(getSupportFragmentManager());
         ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab);
+
         pager.setOffscreenPageLimit(3);
         pager.setAdapter(adapter);
+        tabLayout.setupWithViewPager(pager);
     }
 
     @Override

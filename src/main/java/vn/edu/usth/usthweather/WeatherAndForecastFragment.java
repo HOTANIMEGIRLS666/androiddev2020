@@ -14,12 +14,8 @@ public class WeatherAndForecastFragment extends Fragment {
     public WeatherAndForecastFragment() {
     }
 
-    public static WeatherAndForecastFragment newInstance(int page, String title) {
+    public static WeatherAndForecastFragment newInstance() {
         WeatherAndForecastFragment fragmentFirst = new WeatherAndForecastFragment();
-        Bundle args = new Bundle();
-        args.putInt("someInt", page);
-        args.putString("someTitle", title);
-        fragmentFirst.setArguments(args);
         return fragmentFirst;
     }
 
@@ -27,5 +23,4 @@ public class WeatherAndForecastFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_weather_and_forecast, container, false);
     }
-
 }
