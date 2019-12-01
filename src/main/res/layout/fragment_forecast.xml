@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="2dp"
         android:background="#7AD1FA"
         android:orientation="vertical"
@@ -20,7 +21,7 @@
                 android:layout_width="60dp"
                 android:layout_height="50dp"
                 android:gravity="center"
-                android:text="Monday" />
+                android:text="@string/monday" />
 
             <ImageView
                 android:layout_width="150dp"
@@ -56,7 +57,7 @@
                 android:layout_width="60dp"
                 android:layout_height="50dp"
                 android:gravity="center"
-                android:text="Tuesday" />
+                android:text="@string/tuesday" />
 
             <ImageView
                 android:layout_width="150dp"
@@ -92,7 +93,7 @@
                 android:layout_width="60dp"
                 android:layout_height="50dp"
                 android:gravity="center"
-                android:text="Wednesday" />
+                android:text="@string/wednesday" />
 
             <ImageView
                 android:layout_width="150dp"
@@ -128,7 +129,7 @@
                 android:layout_width="60dp"
                 android:layout_height="50dp"
                 android:gravity="center"
-                android:text="Thursday" />
+                android:text="@string/thursday" />
 
             <ImageView
                 android:layout_width="150dp"
@@ -164,7 +165,7 @@
                 android:layout_width="60dp"
                 android:layout_height="50dp"
                 android:gravity="center"
-                android:text="Friday" />
+                android:text="@string/friday" />
 
             <ImageView
                 android:layout_width="150dp"
@@ -200,7 +201,7 @@
                 android:layout_width="60dp"
                 android:layout_height="50dp"
                 android:gravity="center"
-                android:text="Saturday" />
+                android:text="@string/saturday" />
 
             <ImageView
                 android:layout_width="150dp"

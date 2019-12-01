@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="#BEFFC1"
+    android:layout_margin="5dp"
     tools:context=".WeatherFragment">
 
     <TextView
@@ -18,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/degree"
-        android:text="Cloudy"
+        android:text="@string/cloudy"
         android:textSize="15sp" />
 
     <TextView

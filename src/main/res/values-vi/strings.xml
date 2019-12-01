@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">USTHWEATHER</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="cloudy">Nhieu may</string>
+    <string name="monday">Thu 2</string>
+    <string name="tuesday">Thu 3</string>
+    <string name="wednesday">Thu 4</string>
+    <string name="thursday">Thu 5</string>
+    <string name="friday">Thu 6</string>
+    <string name="saturday">Thu 7</string>
+    <string name="sunday">Chu Nhat</string>
+</resources>
