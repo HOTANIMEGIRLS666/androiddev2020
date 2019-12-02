@@ -1,12 +1,9 @@
 package vn.edu.usth.usthweather;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
 
 import android.media.MediaPlayer;
 import android.os.Environment;
@@ -23,36 +20,6 @@ import java.io.OutputStream;
 
 
 public class WeatherActivity extends AppCompatActivity {
-
-    public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
-        private final int PAGE_COUNT = 3;
-        private String titles[] = new String[] { "Hanoi", "Paris", "Toulouse" };
-
-        public HomeFragmentPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public int getCount() {
-            return PAGE_COUNT;
-        }
-
-        @Override
-        public Fragment getItem(int page) {
-            switch (page) {
-                case 0: return WeatherAndForecastFragment.newInstance();
-                case 1: return WeatherAndForecastFragment.newInstance();
-                case 2: return WeatherAndForecastFragment.newInstance();
-            }
-            return null;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int page) {
-            return titles[page];
-        }
-    }
-
     @Override
     public void onCreate(Bundle saveInstanceState){
         super.onCreate(saveInstanceState);
@@ -62,6 +29,9 @@ public class WeatherActivity extends AppCompatActivity {
         PagerAdapter adapter = new HomeFragmentPagerAdapter(getSupportFragmentManager());
         ViewPager pager = findViewById(R.id.pager);
         TabLayout tabLayout = findViewById(R.id.tab);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         copyFileToExternalStorage(R.raw.miiplaza, "miiplaza.mp3");
         MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw.miiplaza);
@@ -77,10 +47,10 @@ public class WeatherActivity extends AppCompatActivity {
         String pathSDCard = Environment.getExternalStorageDirectory() + "/Android/data/vn.edu.usth.usthweather/" + resourceName;
         try{
             InputStream in = getResources().openRawResource(resourceId);
-            FileOutputStream out = null;
+            FileOutputStream out;
             out = new FileOutputStream(pathSDCard);
             byte[] buff = new byte[1024];
-            int read = 0;
+            int read;
             try {
                 while ((read = in.read(buff)) > 0) {
                     out.write(buff, 0, read);
@@ -91,7 +61,7 @@ public class WeatherActivity extends AppCompatActivity {
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
