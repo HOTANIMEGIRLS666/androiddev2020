@@ -7,6 +7,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -23,7 +24,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 
 public class WeatherActivity extends AppCompatActivity {
     @Override
@@ -46,39 +46,44 @@ public class WeatherActivity extends AppCompatActivity {
         pager.setOffscreenPageLimit(3);
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
-
-        final Handler handler = new Handler(Looper.getMainLooper()){
-            @Override
-            public void handleMessage(Message msg) {
-// This method is executed in main thread
-                String content = msg.getData().getString("server_response");
-                Toast.makeText(getApplicationContext(), content, Toast.LENGTH_SHORT).show();
-            }
-        };
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-// this method is run in a worker thread
-                try {
-// wait for 5 seconds to simulate a long network access
-                    Thread.sleep(5000);
-                }
-                catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-// Assume that we got our data from server
-                Bundle bundle = new Bundle();
-                bundle.putString("server_response", "i dun giddit?");
-// notify main thread
-                Message msg = new Message();
-                msg.setData(bundle);
-                handler.sendMessage(msg);
-            }
-        });
-        t.start();
     }
 
-    private void copyFileToExternalStorage(int resourceId, String resourceName){
+    private class weatherThingTask extends AsyncTask<String, String, String> {
+        protected void onPreExecute(){
+
+        }
+
+        protected String doInBackground(String... param) {
+            try {
+                Thread.sleep(5000);
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onProgressUpdate(String... progress) {
+            //idk update progress or smth.
+        }
+
+        protected void onPostExecute(String result) {
+            final Handler handler = new Handler(Looper.getMainLooper()){
+                @Override
+                public void handleMessage(Message msg) {
+                    String content = msg.getData().getString("server_response");
+                    Toast.makeText(getApplicationContext(), content, Toast.LENGTH_SHORT).show();
+                }
+            };
+            Bundle bundle = new Bundle();
+            bundle.putString("server_response", "i dun giddit?");
+            Message msg = new Message();
+            msg.setData(bundle);
+            handler.sendMessage(msg);
+        }
+    }
+
+        private void copyFileToExternalStorage(int resourceId, String resourceName){
         String pathSDCard = Environment.getExternalStorageDirectory() + "/Android/data/vn.edu.usth.usthweather/" + resourceName;
         try{
             InputStream in = getResources().openRawResource(resourceId);
@@ -111,7 +116,9 @@ public class WeatherActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_refresh:
-                Toast.makeText(this, "REFRESHING!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this,"REFRESHING",Toast.LENGTH_LONG).show();
+                weatherThingTask weatherTask = new weatherThingTask();
+                weatherTask.execute();
                 return true;
             case R.id.action_more:
                 Intent intent0 = new Intent(this,PrefActivity.class);
@@ -148,5 +155,4 @@ public class WeatherActivity extends AppCompatActivity {
         super.onDestroy();
         Log.i("InfoTag", "onDestroy");
     }
-
 }
