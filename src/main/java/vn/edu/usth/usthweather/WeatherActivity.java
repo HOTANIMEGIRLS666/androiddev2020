@@ -4,18 +4,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
@@ -24,6 +23,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class WeatherActivity extends AppCompatActivity {
     @Override
@@ -46,40 +47,53 @@ public class WeatherActivity extends AppCompatActivity {
         pager.setOffscreenPageLimit(3);
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
+
+        weatherThingTask weatherTask = new weatherThingTask();
+        weatherTask.execute();
     }
 
-    private class weatherThingTask extends AsyncTask<String, String, String> {
+    private class weatherThingTask extends AsyncTask<URL, Integer, Bitmap> {
+        @Override
         protected void onPreExecute(){
-
         }
 
-        protected String doInBackground(String... param) {
+        @Override
+        protected Bitmap doInBackground(URL... param) {
             try {
-                Thread.sleep(5000);
+                URL url = new URL("https://usth.edu.vn/" + "uploads/chuong-trinh/2017_01/logo-moi_2.png");
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setDoInput(true);
+                connection.connect();
+
+                int response = connection.getResponseCode();
+                Log.i("USTHWeather", "The response is: " + response);
+
+                InputStream is = connection.getInputStream();
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                connection.disconnect();
+
+                return bitmap;
             }
-            catch (InterruptedException e) {
-                e.printStackTrace();
+            catch(IOException e){
             }
             return null;
         }
 
-        protected void onProgressUpdate(String... progress) {
+        @Override
+        protected void onProgressUpdate(Integer... progress) {
             //idk update progress or smth.
         }
 
-        protected void onPostExecute(String result) {
-            final Handler handler = new Handler(Looper.getMainLooper()){
-                @Override
-                public void handleMessage(Message msg) {
-                    String content = msg.getData().getString("server_response");
-                    Toast.makeText(getApplicationContext(), content, Toast.LENGTH_SHORT).show();
-                }
-            };
-            Bundle bundle = new Bundle();
-            bundle.putString("server_response", "i dun giddit?");
-            Message msg = new Message();
-            msg.setData(bundle);
-            handler.sendMessage(msg);
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+
+            ImageView logo = findViewById(R.id.logo);
+            logo.setImageBitmap(result);
+
+            ImageView logo2 = findViewById(R.id.logo2);
+            logo2.setImageBitmap(result);
         }
     }
 
@@ -117,8 +131,6 @@ public class WeatherActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_refresh:
                 Toast.makeText(this,"REFRESHING",Toast.LENGTH_LONG).show();
-                weatherThingTask weatherTask = new weatherThingTask();
-                weatherTask.execute();
                 return true;
             case R.id.action_more:
                 Intent intent0 = new Intent(this,PrefActivity.class);
