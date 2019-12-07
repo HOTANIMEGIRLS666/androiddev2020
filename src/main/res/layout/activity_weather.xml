@@ -25,10 +25,22 @@
         android:layout_height="wrap_content">
     </com.google.android.material.tabs.TabLayout>
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/pager"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </androidx.viewpager.widget.ViewPager>
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="0.4"
+            android:padding="10dp"
+            android:layout_margin="10dp"
+            android:id="@+id/logo"/>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </androidx.viewpager.widget.ViewPager>
+    </FrameLayout>
 </LinearLayout>
