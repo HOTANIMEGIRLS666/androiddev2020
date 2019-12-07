@@ -26,17 +26,20 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.net.ssl.HttpsURLConnection;
+
+
 public class WeatherActivity extends AppCompatActivity {
     @Override
-    public void onCreate(Bundle saveInstanceState){
+    public void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
         setContentView(R.layout.activity_weather);
-        Log.i("InfoTag", "onCreate");;
+        Log.i("InfoTag", "onCreate");
 
         PagerAdapter adapter = new HomeFragmentPagerAdapter(getSupportFragmentManager());
         ViewPager pager = findViewById(R.id.pager);
         TabLayout tabLayout = findViewById(R.id.tab);
-        MediaPlayer mediaPlayer = MediaPlayer.create(this,R.raw.miiplaza);
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.miiplaza);
         Toolbar toolbar = findViewById(R.id.toolbar);
 
         copyFileToExternalStorage(R.raw.miiplaza, "miiplaza.mp3");
@@ -48,54 +51,99 @@ public class WeatherActivity extends AppCompatActivity {
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
 
-        weatherThingTask weatherTask = new weatherThingTask();
-        weatherTask.execute();
+        /*AsyncTask<String, Void, Bitmap> task = new AsyncTask<String, Void, Bitmap>() {
+            @Override
+            protected Bitmap doInBackground(String... param) {
+                try {
+                    URL url = new URL(param[0]);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setReadTimeout(5000);
+                    connection.setDoInput(true);
+                    Log.e("aloalo", "test1");
+
+                    connection.connect();
+                    Log.e("aloalo", "test2");
+                    int response = connection.getResponseCode();
+                    Log.i("USTHWeather", "The response is: " + response);
+
+
+                    InputStream is = connection.getInputStream();
+                    Log.e("aloalo", "test3");
+                    Bitmap bitmap = BitmapFactory.decodeStream(is);
+                    Log.e("aloalo", "test4");
+
+                    return bitmap;
+                }
+                catch(Exception e){
+                    Log.i("aloalo","ERROR??");
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                super.onPostExecute(bitmap);
+                Log.i("aloaloalo", "aaa");
+
+                ImageView logo = findViewById(R.id.logo);
+                logo.setImageBitmap(bitmap);
+
+                ImageView logo2 = findViewById(R.id.logo2);
+                logo2.setImageBitmap(bitmap);
+
+                ImageView logo3 = findViewById(R.id.logo3);
+                logo3.setImageBitmap(bitmap);
+            }
+        };
+        task.execute("https://usth.edu.vn/uploads/chuong-trinh/2017_01/logo-moi_2.png");
+    }*/
+        System.setProperty("http.keepAlive", "false");
+        new WeatherThingTask().execute("https://usth.edu.vn/uploads/chuong-trinh/2017_01/logo-moi_2.png");
     }
 
-    private class weatherThingTask extends AsyncTask<URL, Integer, Bitmap> {
+    private class WeatherThingTask extends AsyncTask<String, Void, Bitmap> {
         @Override
-        protected void onPreExecute(){
-        }
-
-        @Override
-        protected Bitmap doInBackground(URL... param) {
+        protected Bitmap doInBackground(String... param) {
             try {
-                URL url = new URL("https://usth.edu.vn/" + "uploads/chuong-trinh/2017_01/logo-moi_2.png");
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                URL url = new URL(param[0]);
+                HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
+                connection.setConnectTimeout(5000);
+                connection.setReadTimeout(5000);
                 connection.setDoInput(true);
-                connection.connect();
+                connection.setDoOutput(true);
+                Log.e("aloalo", "test1");
 
+                connection.connect();
+                Log.e("aloalo", "test2");
                 int response = connection.getResponseCode();
                 Log.i("USTHWeather", "The response is: " + response);
 
+
                 InputStream is = connection.getInputStream();
+                Log.e("aloalo", "test3");
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
-                connection.disconnect();
+                Log.e("aloalo", "test4");
 
                 return bitmap;
             }
-            catch(IOException e){
+            catch(Exception e){
+                Log.i("aloalo","ERROR??");
             }
             return null;
         }
 
         @Override
-        protected void onProgressUpdate(Integer... progress) {
-            //idk update progress or smth.
-        }
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            Log.i("aloaloalo", "aaa");
 
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            super.onPostExecute(result);
-
-            ImageView logo = findViewById(R.id.logo);
-            logo.setImageBitmap(result);
-
-            ImageView logo2 = findViewById(R.id.logo2);
-            logo2.setImageBitmap(result);
+            ImageView logo2 = findViewById(R.id.logo);
+            logo2.setImageBitmap(bitmap);
         }
     }
+
 
         private void copyFileToExternalStorage(int resourceId, String resourceName){
         String pathSDCard = Environment.getExternalStorageDirectory() + "/Android/data/vn.edu.usth.usthweather/" + resourceName;

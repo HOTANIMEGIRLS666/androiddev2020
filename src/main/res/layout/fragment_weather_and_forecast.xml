@@ -6,12 +6,6 @@
     tools:context=".WeatherAndForecastFragment"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/logo2">
-    </ImageView>
-
     <include layout="@layout/fragment_weather"/>
     <include layout="@layout/fragment_forecast"/>
 </LinearLayout>
