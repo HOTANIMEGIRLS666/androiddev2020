@@ -1,6 +1,5 @@
 package vn.edu.usth.usthweather;
 
-
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,8 +14,8 @@ public class WeatherAndForecastFragment extends Fragment {
     }
 
     public static WeatherAndForecastFragment newInstance() {
-        WeatherAndForecastFragment fragmentFirst = new WeatherAndForecastFragment();
-        return fragmentFirst;
+        WeatherAndForecastFragment fragment = new WeatherAndForecastFragment();
+        return fragment;
     }
 
     @Override

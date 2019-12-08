@@ -15,17 +15,21 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.tabs.TabLayout;
 
-import java.io.FileNotFoundException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -42,24 +46,52 @@ public class WeatherActivity extends AppCompatActivity {
         PagerAdapter adapter = new HomeFragmentPagerAdapter(getSupportFragmentManager());
         ViewPager pager = findViewById(R.id.pager);
         TabLayout tabLayout = findViewById(R.id.tab);
-        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.miiplaza);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.miiplaza);
 
         copyFileToExternalStorage(R.raw.miiplaza, "miiplaza.mp3");
         mediaPlayer.start();
         mediaPlayer.setLooping(true);
 
-        setSupportActionBar(toolbar);
-        pager.setOffscreenPageLimit(3);
+        pager.setOffscreenPageLimit(2);
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
+        setSupportActionBar(toolbar);
 
         System.setProperty("http.keepAlive", "false");
 
+        // new WeatherThingTask().execute("https://usth.edu.vn/uploads/chuong-trinh/2017_01/logo-moi_2.png");
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(imageRequest);
+        queue.add(request);
     }
 
+    //http://api.openweathermap.org/data/2.5/weather?q=Paris&appid=db7d5e91e45fb33f36610f0ff366cb01
+
+    StringRequest request = new StringRequest("http://api.openweathermap.org/data/2.5/weather?q=Paris&appid=db7d5e91e45fb33f36610f0ff366cb01",
+        new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("StringRequest", "Json response " + response);
+                try{
+                    JSONObject obj = new JSONObject(response);
+                    TextView titleValue = findViewById(R.id.city);
+                    titleValue.setText(obj.getString("name"));
+                    // JSONObject subObject = obj.getJSONObject("location");
+                }catch (JSONException e) {
+                    Log.e("StringRequest","EROOR!!");
+                }
+            }
+        },
+        new Response.ErrorListener() {
+        @Override
+            public void onErrorResponse(VolleyError error) {
+            Log.e("StringRequest","ERROR!!!");
+        }
+    });
+
+
+    // Request Image by using Volley
     Response.Listener<Bitmap> listener = new Response.Listener<Bitmap>() {
         @Override
         public void onResponse(Bitmap response) {
@@ -72,6 +104,7 @@ public class WeatherActivity extends AppCompatActivity {
             listener, 0, 0, ImageView.ScaleType.CENTER,
             Bitmap.Config.ARGB_8888,null);
 
+    // Request Image by using AsyncTask
     private class WeatherThingTask extends AsyncTask<String, Void, Bitmap> {
         @Override
         protected Bitmap doInBackground(String... param) {
@@ -85,7 +118,7 @@ public class WeatherActivity extends AppCompatActivity {
 
                 connection.connect();
                 int response = connection.getResponseCode();
-                Log.i("USTHWeather", "The response is: " + response);
+                Log.i("WeatherThingTask", "The response is: " + response);
 
 
                 InputStream is = connection.getInputStream();
@@ -93,7 +126,7 @@ public class WeatherActivity extends AppCompatActivity {
                 return bitmap;
             }
             catch(Exception e){
-                Log.i("WeatherThingTask","ERROR!");
+                Log.e("WeatherThingTask","ERROR!");
             }
             return null;
         }
@@ -109,7 +142,7 @@ public class WeatherActivity extends AppCompatActivity {
     }
 
 
-        private void copyFileToExternalStorage(int resourceId, String resourceName){
+    private void copyFileToExternalStorage(int resourceId, String resourceName){
         String pathSDCard = Environment.getExternalStorageDirectory() + "/Android/data/vn.edu.usth.usthweather/" + resourceName;
         try{
             InputStream in = getResources().openRawResource(resourceId);
@@ -125,10 +158,8 @@ public class WeatherActivity extends AppCompatActivity {
                 in.close();
                 out.close();
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Log.e("CopyFileToExternalStorage","ERROR!!");
         }
     }
 
