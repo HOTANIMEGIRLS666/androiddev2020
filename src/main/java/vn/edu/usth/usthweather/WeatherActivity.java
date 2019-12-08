@@ -17,6 +17,10 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.FileNotFoundException;
@@ -50,56 +54,23 @@ public class WeatherActivity extends AppCompatActivity {
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
 
-        /*AsyncTask<String, Void, Bitmap> task = new AsyncTask<String, Void, Bitmap>() {
-            @Override
-            protected Bitmap doInBackground(String... param) {
-                try {
-                    URL url = new URL(param[0]);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setRequestMethod("GET");
-                    connection.setReadTimeout(5000);
-                    connection.setDoInput(true);
-                    Log.e("aloalo", "test1");
-
-                    connection.connect();
-                    Log.e("aloalo", "test2");
-                    int response = connection.getResponseCode();
-                    Log.i("USTHWeather", "The response is: " + response);
-
-
-                    InputStream is = connection.getInputStream();
-                    Log.e("aloalo", "test3");
-                    Bitmap bitmap = BitmapFactory.decodeStream(is);
-                    Log.e("aloalo", "test4");
-
-                    return bitmap;
-                }
-                catch(Exception e){
-                    Log.i("aloalo","ERROR??");
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Bitmap bitmap) {
-                super.onPostExecute(bitmap);
-                Log.i("aloaloalo", "aaa");
-
-                ImageView logo = findViewById(R.id.logo);
-                logo.setImageBitmap(bitmap);
-
-                ImageView logo2 = findViewById(R.id.logo2);
-                logo2.setImageBitmap(bitmap);
-
-                ImageView logo3 = findViewById(R.id.logo3);
-                logo3.setImageBitmap(bitmap);
-            }
-        };
-        task.execute("https://usth.edu.vn/uploads/chuong-trinh/2017_01/logo-moi_2.png");
-    }*/
         System.setProperty("http.keepAlive", "false");
-        new WeatherThingTask().execute("https://usth.edu.vn/uploads/chuong-trinh/2017_01/logo-moi_2.png");
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(imageRequest);
     }
+
+    Response.Listener<Bitmap> listener = new Response.Listener<Bitmap>() {
+        @Override
+        public void onResponse(Bitmap response) {
+            ImageView iv = findViewById(R.id.logo);
+            iv.setImageBitmap(response);
+        }
+    };
+
+    ImageRequest imageRequest = new ImageRequest("https://usth.edu.vn/uploads/chuong-trinh/2017_01/logo-moi_2.png",
+            listener, 0, 0, ImageView.ScaleType.CENTER,
+            Bitmap.Config.ARGB_8888,null);
 
     private class WeatherThingTask extends AsyncTask<String, Void, Bitmap> {
         @Override
@@ -111,24 +82,18 @@ public class WeatherActivity extends AppCompatActivity {
                 connection.setConnectTimeout(5000);
                 connection.setReadTimeout(5000);
                 connection.setDoInput(true);
-                connection.setDoOutput(true);
-                Log.e("aloalo", "test1");
 
                 connection.connect();
-                Log.e("aloalo", "test2");
                 int response = connection.getResponseCode();
                 Log.i("USTHWeather", "The response is: " + response);
 
 
                 InputStream is = connection.getInputStream();
-                Log.e("aloalo", "test3");
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
-                Log.e("aloalo", "test4");
-
                 return bitmap;
             }
             catch(Exception e){
-                Log.i("aloalo","ERROR??");
+                Log.i("WeatherThingTask","ERROR!");
             }
             return null;
         }
@@ -136,10 +101,10 @@ public class WeatherActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            Log.i("aloaloalo", "aaa");
+            Log.i("WeatherThingTask", "onPostExecute");
 
-            ImageView logo2 = findViewById(R.id.logo);
-            logo2.setImageBitmap(bitmap);
+            ImageView logo = findViewById(R.id.logo);
+            logo.setImageBitmap(bitmap);
         }
     }
 
