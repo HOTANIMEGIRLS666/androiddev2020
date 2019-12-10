@@ -37,11 +37,17 @@ import javax.net.ssl.HttpsURLConnection;
 
 
 public class WeatherActivity extends AppCompatActivity {
+    private static RequestQueue queue;
+    public static RequestQueue getRequestQueue(){
+        return queue;
+    }
+
     @Override
     public void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
         setContentView(R.layout.activity_weather);
         Log.i("InfoTag", "onCreate");
+        queue = Volley.newRequestQueue(this);
 
         PagerAdapter adapter = new HomeFragmentPagerAdapter(getSupportFragmentManager());
         ViewPager pager = findViewById(R.id.pager);
@@ -53,7 +59,7 @@ public class WeatherActivity extends AppCompatActivity {
         mediaPlayer.start();
         mediaPlayer.setLooping(true);
 
-        pager.setOffscreenPageLimit(2);
+        pager.setOffscreenPageLimit(3);
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
         setSupportActionBar(toolbar);
@@ -61,35 +67,10 @@ public class WeatherActivity extends AppCompatActivity {
         System.setProperty("http.keepAlive", "false");
 
         // new WeatherThingTask().execute("https://usth.edu.vn/uploads/chuong-trinh/2017_01/logo-moi_2.png");
-        RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(imageRequest);
-        queue.add(request);
     }
 
     //http://api.openweathermap.org/data/2.5/weather?q=Paris&appid=db7d5e91e45fb33f36610f0ff366cb01
-
-    StringRequest request = new StringRequest("http://api.openweathermap.org/data/2.5/weather?q=Paris&appid=db7d5e91e45fb33f36610f0ff366cb01",
-        new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.i("StringRequest", "Json response " + response);
-                try{
-                    JSONObject obj = new JSONObject(response);
-                    TextView titleValue = findViewById(R.id.city);
-                    titleValue.setText(obj.getString("name"));
-                    // JSONObject subObject = obj.getJSONObject("location");
-                }catch (JSONException e) {
-                    Log.e("StringRequest","EROOR!!");
-                }
-            }
-        },
-        new Response.ErrorListener() {
-        @Override
-            public void onErrorResponse(VolleyError error) {
-            Log.e("StringRequest","ERROR!!!");
-        }
-    });
-
 
     // Request Image by using Volley
     Response.Listener<Bitmap> listener = new Response.Listener<Bitmap>() {

@@ -15,11 +15,15 @@ public class HomeFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int page) {
         switch (page) {
-            case 0: return WeatherAndForecastFragment.newInstance();
-            case 1: return WeatherAndForecastFragment.newInstance();
-            case 2: return WeatherAndForecastFragment.newInstance();
+            case 0:
+                return WeatherAndForecastFragment.newInstance(0);
+            case 1:
+                return WeatherAndForecastFragment.newInstance(1);
+            case 2:
+                return WeatherAndForecastFragment.newInstance(2);
+            default:
+                return null;
         }
-        return null;
     }
 
     @Override
